@@ -57,12 +57,13 @@
   .thumbnail {
       padding: 0 0 15px 0;
       border: none;
-      border-radius: 0;
+      border-radius: 0
   }
   .thumbnail img {
-      width: 400px;
-      height: 300px;
+      width: 100%;
+      height:300px;
       object-fit:cover;
+      object-position:center center;
       margin-bottom: 10px;
   }
   .carousel-control.right, .carousel-control.left {
@@ -299,29 +300,37 @@
 </div>
 
 <!-- Container (Portfolio Section) -->
+<!--NOTE!!: To Professor: I know this is a little different from the template but I wanted to try exploring how to handle different image sizes for thumbnails. Hopefully this is okay.-->
 <div id="portfolio" class="container-fluid text-center bg-grey">
   <h2>Portfolio</h2><br>
   <h4>What we have created</h4>
   <div class="row text-center slideanim">
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="thumbnail">
         <img src="http://goodthinggoing.net/wp-content/uploads/2017/07/lee-kang-bin-1.jpg" alt="Coffee Art">
         <p><strong>Latte Art</strong></p>
-        <p>by Lee Kang Bin. Source: <a href="http://goodthinggoing.net/2017/07/06/lee-kang-bin-latte-art/">goodthinggoing.net</a></p>
+        <p>Lee Kang Bin. Source: <a href="http://goodthinggoing.net/2017/07/06/lee-kang-bin-latte-art/">goodthinggoing</a></p>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="thumbnail">
-        <img src="https://c1.staticflickr.com/9/8013/7684307556_18984344c6_b.jpg" alt="bingsu" width="400" height="300">
+        <img src="https://c1.staticflickr.com/9/8013/7684307556_18984344c6_b.jpg" alt="bingsu">
         <p><strong>Bingsu</strong></p>
         <p>From Caffebene's <a href="https://www.flickr.com/photos/caffebeneny/7684307556">Flickr</a></p>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div class="thumbnail">
-        <img src="http://maxpixel.freegreatpicture.com/static/photo/1x/Latte-Art-Cappuccino-Cup-Of-Coffee-Coffee-1213580.jpg" alt="latte" width="400" height="300">
+        <img src="http://maxpixel.freegreatpicture.com/static/photo/1x/Latte-Art-Cappuccino-Cup-Of-Coffee-Coffee-1213580.jpg" alt="latte">
         <p><strong>Lattes</strong></p>
         <p>Courtesy of <a href="http://maxpixel.freegreatpicture.com/Latte-Art-Cappuccino-Cup-Of-Coffee-Coffee-1213580">Maxpixel</a></p>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="thumbnail">
+        <img src="https://realfood.tesco.com/media/images/Chocolate-cream-pots-LGH-455b8425-0e71-4971-98cf-37ca173d4ebd-0-1400x919.jpg" alt="latte">
+        <p><strong>Coffee&Cream Pots</strong></p>
+        <p>From <a href="https://realfood.tesco.com/recipes/chocolate-and-coffee-cream-pots.html">Tesco</a></p>
       </div>
     </div>
   </div><br>
