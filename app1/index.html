@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+      body {
+        text-align:center;
+      }
+      strong { 
+        text-transform:capitalize;
+      }
+      .hidden {
+        display:none;
+      }
+      .card {
+        display:inline-block;
+        border:1px solid #ccc;
+        margin:10px;
+        border-radius:5px;
+      }
+      .card-body {
+        padding:10px;
+        cursor:default;
+      }
+      .card img {
+        height:auto;
+        width:100%;
+      }
+      .complete {
+        color:green;
+      }
+      .incomplete {
+        color:yellow;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card hidden" id="template" style="width: 20rem;">
+      <img class="card-img-top" src="https://via.placeholder.com/300x300" alt="Card image cap">
+      <div class="card-body">
+        <h4 class="card-title">Card title</h4>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+    </div>
+
+    <script>
+      $.get('https://data.cityofchicago.org/resource/cdmx-wzbz.json?$limit=100',function(response) {
+        //console.log(response);
+        $.each(response,function(k,v) {
+          //console.log(k,v);
+          var serviceNo = response[k].service_request_number;
+          var streetAddress = response[k].street_address;
+          var status = response[k].status;
+          
+          if(status.includes('Completed')) {
+            statusClass = 'complete';
+          } 
+          else if(status.includes('Incomplete')) {
+            statusClass = 'incomplete';
+          }
+          //$('body').append("<h1>"+k+"</h1> <p><strong>service request number: </strong>" + serviceNo + "</p>" + "<p><strong>street address: </strong>" + streetAddress + "<p><strong>status: </strong>" + status + "</strong>");
+          var card = $('#template').clone().removeClass('hidden');
+          card.find('.card-title').text(serviceNo);
+          card.find('.card-text').html("<p><strong>street address: </strong>" + streetAddress + "</p> <p><strong>status: </strong><span class='" + statusClass + "'>" + status + "</span></p>");
+          card.show().appendTo('body');
+        });
+      });
+    </script>
+  </body>
+</body>
+</html>
