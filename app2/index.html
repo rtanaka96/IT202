@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>311 Graffiti Cleanup</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <style>
+            #form {
+              margin-top:15px;
+            }
+            #map {
+                height:600px;
+            }
+            h2, span, b {
+                text-transform:capitalize;
+            }
+            .complete {
+              color:green;
+            }
+            .incomplete {
+              color:yellow;
+            }
+            #alert {
+              display:none;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="container text-center" id="form">
+      <h2>311 Graffiti Requests</h2>
+      <p>Please enter a zip code below:</p>
+      <div class="form-group">
+        <input id="zipCode" class="input" placeholder="Ex: 60607">
+        <button id="search" class="btn">Search</button>
+      </div>
+      <div id="alert" class="alert" role="alert">
+        <h4 class="alert-heading"></h4>
+        <p class="mb-0"></p>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+    
+    
+    function initMap() {
+          var url = 'https://data.cityofchicago.org/resource/cdmx-wzbz.json?zip_code=';
+          var zip = $('#zipCode').val();
+          var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip);
+          var itemLength = ((url+zip).length);
+          
+          if(isValidZip == true) {
+            $('.btn').removeClass('btn-danger').addClass('btn-primary');
+            
+            $('#alert').fadeIn(300,function() {
+              $(this).removeClass('alert-danger').addClass('alert-success');
+              $(this).find('.alert-heading').text('Success!');
+              $(this).find('p').text(itemLength + ' results found.');
+            });
+            
+            $('#map').fadeIn();
+            
+            $.get(url+zip,function(response) {
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: {lat: parseFloat(response[0].latitude), lng: parseFloat(response[0].longitude)}
+              });
+  
+              $.each(response,function(k,v) {
+                var serviceNo = v.service_request_number;
+                var streetAddress = v.street_address.toLowerCase();
+                var status = v.status;
+  
+                if(status.includes('Completed')) {
+                  statusClass = 'complete';
+                } 
+                else {
+                  statusClass = 'incomplete';
+                }
+                
+                var info = '<h2>' + serviceNo + '</h2><b>address: </b><span>' + streetAddress + '</span><br><b>status: </b><span class=' + statusClass + '>' + status + '</span>';
+                
+                 var infowindow = new google.maps.InfoWindow({
+                  content: info
+                });
+        
+                var marker = new google.maps.Marker({
+                  position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                  map: map
+                 });
+                
+                marker.addListener('click', function() {
+                  infowindow.open(map, marker);
+                });           
+              });
+            });
+          }
+        else {
+          $('.btn').removeClass('btn-primary').addClass('btn-danger');
+          $('#map').fadeOut();
+          $('#alert').fadeIn(300,function() {
+              $(this).removeClass('alert-success').addClass('alert-danger');
+              $(this).find('.alert-heading').text('Error!');
+              $(this).find('p').text('Please enter a valid zip code.');
+          });
+        }
+      }
+      
+      $('#search').on('click',initMap);
+      </script>
+    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyxP6holBPUQtnYK58Misiudym6UiGieQ">
+    </script>
+    </body>
+</html>

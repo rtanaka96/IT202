@@ -24,6 +24,10 @@
         margin:10px;
         border-radius:5px;
       }
+      .card-title {
+        margin:0 !important;
+        padding:10px;
+      }
       .card-body {
         padding:10px;
         cursor:default;
@@ -33,24 +37,23 @@
         width:100%;
       }
       .complete {
-        color:green;
+        background:green;
       }
       .incomplete {
-        color:yellow;
+        background:yellow;
       }
     </style>
   </head>
   <body>
     <div class="card hidden" id="template" style="width: 20rem;">
-      <img class="card-img-top" src="https://via.placeholder.com/300x300" alt="Card image cap">
+      <h4 class="card-title">Card title</h4>
       <div class="card-body">
-        <h4 class="card-title">Card title</h4>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
       </div>
     </div>
 
     <script>
-      $.get('https://data.cityofchicago.org/resource/cdmx-wzbz.json?$limit=100',function(response) {
+      $.get('https://data.cityofchicago.org/resource/cdmx-wzbz.json?status=Open&$limit=100',function(response) {
         //console.log(response);
         $.each(response,function(k,v) {
           //console.log(k,v);
@@ -61,16 +64,21 @@
           if(status.includes('Completed')) {
             statusClass = 'complete';
           } 
-          else if(status.includes('Incomplete')) {
+          else {
             statusClass = 'incomplete';
           }
           //$('body').append("<h1>"+k+"</h1> <p><strong>service request number: </strong>" + serviceNo + "</p>" + "<p><strong>street address: </strong>" + streetAddress + "<p><strong>status: </strong>" + status + "</strong>");
           var card = $('#template').clone().removeClass('hidden');
-          card.find('.card-title').text(serviceNo);
-          card.find('.card-text').html("<p><strong>street address: </strong>" + streetAddress + "</p> <p><strong>status: </strong><span class='" + statusClass + "'>" + status + "</span></p>");
+          card.find('.card-title').text(serviceNo).addClass(statusClass);
+          card.find('.card-text').html("<p><strong>street address: </strong>" + streetAddress + "</p> <p><strong>status: </strong>" + status + "</p>");
           card.show().appendTo('body');
         });
       });
+      
+      $('.btn').on('click',function(){
+        initMap();
+      });
+      
     </script>
   </body>
 </body>
