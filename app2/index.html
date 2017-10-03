@@ -9,11 +9,18 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
+            .container {
+              cursor:default;
+            }
             #form {
               margin-top:15px;
             }
             #map {
                 height:600px;
+            }
+            .input-group {
+              width:25%;
+              margin:0 auto;
             }
             h2, span, b {
                 text-transform:capitalize;
@@ -34,8 +41,12 @@
       <h2>311 Graffiti Requests</h2>
       <p>Please enter a zip code below:</p>
       <div class="form-group">
-        <input id="zipCode" class="input" placeholder="Ex: 60607">
-        <button id="search" class="btn">Search</button>
+        <div class="input-group">
+          <input id="zipCode" class="form-control" placeholder="Ex: 60607">
+          <span class="input-group-btn">
+            <button id="search" class="btn">Search</button>
+          </span>
+        </div>
       </div>
       <div id="alert" class="alert" role="alert">
         <h4 class="alert-heading"></h4>
@@ -49,58 +60,72 @@
     
     
     function initMap() {
-          var url = 'https://data.cityofchicago.org/resource/cdmx-wzbz.json?zip_code=';
-          var zip = $('#zipCode').val();
-          var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zip);
-          var itemLength = ((url+zip).length);
+          var url = 'https://data.cityofchicago.org/resource/cdmx-wzbz.json?zip_code=' + $('#zipCode').val();
+          var isValidZip = /(^\d{5}$)|(^\d{5}-\d{4}$)/.test($('#zipCode').val());
           
           if(isValidZip == true) {
-            $('.btn').removeClass('btn-danger').addClass('btn-primary');
-            
-            $('#alert').fadeIn(300,function() {
-              $(this).removeClass('alert-danger').addClass('alert-success');
-              $(this).find('.alert-heading').text('Success!');
-              $(this).find('p').text(itemLength + ' results found.');
-            });
-            
-            $('#map').fadeIn();
-            
-            $.get(url+zip,function(response) {
-              var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: {lat: parseFloat(response[0].latitude), lng: parseFloat(response[0].longitude)}
-              });
-  
-              $.each(response,function(k,v) {
-                var serviceNo = v.service_request_number;
-                var streetAddress = v.street_address.toLowerCase();
-                var status = v.status;
-  
-                if(status.includes('Completed')) {
-                  statusClass = 'complete';
-                } 
-                else {
-                  statusClass = 'incomplete';
-                }
-                
-                var info = '<h2>' + serviceNo + '</h2><b>address: </b><span>' + streetAddress + '</span><br><b>status: </b><span class=' + statusClass + '>' + status + '</span>';
-                
-                 var infowindow = new google.maps.InfoWindow({
-                  content: info
+            $.get(url,function(response) {
+              var size = Object.keys(response).length;
+              if(size < 1) {
+                  $('#map').hide();
+                  $('.btn').addClass('btn-danger').removeClass('btn-primary');
+                  $('#alert').fadeIn(300,function() {
+                    $(this).removeClass('alert-success').addClass('alert-danger');
+                    $(this).find('.alert-heading').text('Sorry!');
+                    $(this).find('p').text('No results found. Please try a different zip code.');
+                  });
+              }
+              else {
+                $('.btn').removeClass('btn-danger').addClass('btn-primary');
+                $('#alert').fadeIn(300,function() {
+                    $(this).removeClass('alert-danger').addClass('alert-success');
+                    $(this).find('.alert-heading').text('Success!');
+                    $(this).find('p').text(size + ' results found.');
                 });
-        
-                var marker = new google.maps.Marker({
-                  position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
-                  map: map
-                 });
                 
-                marker.addListener('click', function() {
-                  infowindow.open(map, marker);
-                });           
+                
+                  $('#map').fadeIn();
+                
+                  var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 10,
+                    center: {lat: parseFloat(response[0].latitude), lng: parseFloat(response[0].longitude)}
+                  });
+                  
+                    
+                  $.each(response,function(k,v) {
+                    var serviceNo = v.service_request_number;
+                    var streetAddress = v.street_address.toLowerCase();
+                    var status = v.status;
+      
+                    if(status.includes('Completed')) {
+                      statusClass = 'complete';
+                    } 
+                    else {
+                      statusClass = 'incomplete';
+                    }
+                  
+                    var info = '<h2>' + serviceNo + '</h2><b>address: </b><span>' + streetAddress + '</span><br><b>status: </b><span class=' + statusClass + '>' + status + '</span>';
+                    
+                     var infowindow = new google.maps.InfoWindow({
+                      content: info
+                      });
+            
+                    var marker = new google.maps.Marker({
+                      position: {lat: parseFloat(v.latitude), lng: parseFloat(v.longitude)},
+                      map: map
+                     });
+                    
+                    marker.addListener('click', function() {
+                      infowindow.open(map, marker);
+                    });
+                });
+              }
               });
-            });
-          }
+            }
+            
+            
         else {
+          $('#map').fadeOut();
           $('.btn').removeClass('btn-primary').addClass('btn-danger');
           $('#map').fadeOut();
           $('#alert').fadeIn(300,function() {
