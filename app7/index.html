@@ -9,20 +9,65 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	  <style>
+	    .container {
+	      margin-top:20px;
+	    }
+	    label:not(#dept3):not(#dept4) {
+	      font-weight:bold;
+	    }
+	    select, input, label {
+	      text-transform:capitalize;
+	    }
+	  </style>
+	</head>
+  <body>
+    <div class="container">
+      <div id="form" class="form">
+        <div class="form-group">
+          <label for="dept">Department</label>
+          <select class="form-control" id="dept1"></select>
+        </div>
+        <br>
+        <div class="form-group">
+          <label for="dept2">Department</label>
+          <input list="dept2">
+            <datalist id="dept2">
+            </datalist>
+        </div>
+        <div class="form-row col-md-12">
+            <div class="form-group col-md-6">
+              <div class="form-check">
+                <label class="form-check-label" id="dept3">
+                </label>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <div class="form-check">
+                <label class="form-check-label" id="dept4">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
       $.get('https://data.cityofchicago.org/resource/tt4n-kn4t.json?$query=SELECT%20DISTINCT%20department',function(response) {
-          var select = $('#dept');
+          var select = $('#dept1');
+          var datalist = $('#dept2');
+          var radio = $('#dept3');
+          var checkbox = $('#dept4');
+          
           $.each(response,function(k,v) {
-            select.append('<option>' + v.department + '</option>');
-          });
-          $('#form').append(select);
-      });
-    </script>
-  </head>
+            var dept = v.department.toLowerCase();
 
-  <body>
-    <div id="form" class="form-group">
-      <select class="form-control" id="dept"></select>
-    </div>
+            select.append('<option>' + dept + '</option>');
+            datalist.append('<option value="' + dept + '"/></option>');
+            radio.append('<input class="form-check-input" type="radio" name="dept3"> &nbsp;' + dept + '<br>');
+            checkbox.append('<input class="form-check-input" type="checkbox" name="dept3"> &nbsp;' + dept + '<br>');
+          });
+        });
+    </script>
   </body>
 </html>
