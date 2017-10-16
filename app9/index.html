@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>App9</title>
+        <style>
+            canvas {
+                background:#fff;
+                border:2px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" height="400" width="400"></canvas>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+             var c = document.getElementById("canvas");
+             var ctx = c.getContext("2d");
+             
+            $('#canvas').on('click',function(evt) {
+                //console.log(evt);
+                //drawCircle(evt.clientX,evt.clientY);
+                ctx.clearRect(0,0,c.width,c.height);
+            });
+            
+            function drawCircle(x,y) {
+                var xpos = Math.floor(Math.random()*c.width);
+                var ypos = Math.floor(Math.random()*c.height);
+                
+                var rad = Math.floor(Math.random() * (100 - 15 + 1)) + 15;
+                var hue = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+                
+                ctx.beginPath();
+                ctx.arc(xpos,ypos,rad,0,2*Math.PI);
+                ctx.fillStyle = hue;
+                ctx.fill();
+                ctx.strokeStyle="rgba(255,255,255,0)";
+                ctx.stroke();
+                
+                //console.log(rad);
+                requestAnimationFrame(drawCircle);
+            }
+            
+            requestAnimationFrame(drawCircle);
+            
+        </script>
+    </body>
+</html>
