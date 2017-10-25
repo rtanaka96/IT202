@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>App11</title>
+  </head>
+  <body>
+    <div class="form">
+      <input id="displayName" type="text" placeholder="Display Name">
+      <br>
+      <span>Share Location Value</span>
+      <input name="shareLocation" id="shareTrue" type="radio" value="true"><label for="shareLocation">True</label>
+      <input name="shareLocation" id="shareFalse" type="radio" value="false" checked><label for="shareLocation">False</label>
+      <br>
+      <span id="dateTime">datetime</span>
+      <br>
+      <button id="save">Save Settings</button>
+      
+      
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+    <script>
+      var db = new Dexie("myDatabase");
+      db.version(1).stores({
+        settings: 'name,value'
+      });
+      
+      $(document).ready(function() {
+        var dateTime = $('#dateTime');
+        var date = new Date();
+        
+        dateTime.text(date);
+      });
+      
+      db.settings.add({
+    		name: 'displayName',
+    		value: 'fuckme'
+    	});
+    	
+    	db.open();
+    	
+    	db.settings.each(settings,function(k,v) {
+    	   alert(v);
+    	});
+    	
+    	//whatthefucklmao
+    </script>
+  </body>
+</html>

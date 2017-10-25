@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>App9</title>
+        <style>
+            canvas {
+                background:#fff;
+                border:2px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" height="300" width="300"></canvas>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script>
+             var c = document.getElementById("canvas");
+             var ctx = c.getContext("2d");
+
+             /*$(document).keydown(function(e) {
+                 if(e.which == 37 | e.which == 39) {
+                     ctx.clearRect(0,0,c.width,c.height);
+                     requestAnimationFrame(drawCharacter);
+                     
+                 }
+                 switch(e.which) {
+                    case 37: // left
+                        draw(x--,c.height/2);
+                        break;
+            
+                    case 39: // right
+                        draw(x++,c.height/2);
+                        break;
+            
+                    default: return; // exit this handler for other keys
+                }
+                e.preventDefault(); // prevent the default action (scroll / move caret)
+            });
+            
+            function draw(x,y) {
+                var xpos = x;
+                var ypos = y;
+                
+                //var rad = Math.floor(Math.random() * (100 - 15 + 1)) + 15;
+                
+                
+                var hue = "rgba(300,200,100,1)";
+                ctx.beginPath();
+                ctx.arc(xpos,ypos,10,0,2*Math.PI);
+                ctx.fillStyle = hue;
+                ctx.fill();
+                ctx.strokeStyle="rgba(255,255,255,0)";
+                ctx.stroke();
+            }
+            
+            function drawCharacter() {
+                var y = 0;
+                var xPos = Math.floor(Math.random() * (c.width - 0 + 1)) + 1;
+                var yPos = y++;
+                var img =new Image();
+                img.onload=function(){
+                  ctx.drawImage(img,xPos,yPos);
+                }
+                img.src = "https://orig00.deviantart.net/0879/f/2013/227/1/9/gs___madoka_attack_1_sprite_sheet_by_konbe-d6iceyx.gif";
+                
+                requestAnimationFrame(drawCharacter);
+            }*/
+            
+            var x = 0;
+            var y = c.height - 25;
+            test = 1;
+            
+            window.onload = game();
+        
+            function game() {
+                ctx.clearRect(0,0,c.width,c.height);
+                mc(x,y);
+                benefit();
+                harm();
+                drawMC();
+                requestAnimationFrame(game);
+            }
+            
+            function drawMC() {
+                $(document).keydown(function(e) {
+                    switch(e.which) {
+                        case 37: // left
+                        x-=5;
+                        break;
+                    
+                        case 39: // right
+                        x+=5;
+                        break;
+                    
+                        default: return;
+                    }
+                        
+                    if(x > c.width) {
+                        x = -25;
+                    }
+                        
+                    else if (x < -20) {
+                        x = c.width;
+                    }
+                    
+                    mc(x,y);
+                });  
+                
+                // var fallX = Math.floor(Math.random() * (c.width - 0));
+                // var fallY = 0;
+                // fallY += 10;
+                // requestAnimationFrame(fall);
+                
+                // fall(benefit,fallX,fallY);
+                // fall(harm,fallX,fallY);
+                
+                
+            }
+
+            function mc(x,y) {
+                var img = new Image();
+                
+                img.src = "https://vignette.wikia.nocookie.net/finalfantasy/images/e/e3/Warrior-ff1-gba.png/revision/latest?cb=20110109182326";
+                
+                img.onload=function() {
+                    ctx.drawImage(img, x, y, 25, 25);
+                };
+            }
+            
+            // var benefit = new Image();
+            // benefit.src = "http://piq.codeus.net/static/media/userpics/piq_299537_400x400.png";
+            
+            // var harm = new Image();
+            // harm.src = "http://data.whicdn.com/images/233194693/large.gif";
+            
+            // function fall(chara,x,y) {
+            //     //var fallX = Math.floor(Math.random() * (c.width - 0));
+            //     //var fallY = 0;
+            //     //fallY += 10;
+                
+            //     ctx.drawImage(chara,x,y,25,25);   
+    
+            //   requestAnimationFrame(fall);
+            // }
+            
+            var benefitX = Math.floor(Math.random() * (c.width - 0));
+            var harmX = Math.floor(Math.random() * (c.width - 0));
+            var benefitY = 0;
+            
+            function benefit() {
+                var img = new Image();
+                img.src = "http://piq.codeus.net/static/media/userpics/piq_299537_400x400.png";
+                
+                ctx.drawImage(img,benefitX,benefitY,25,25);   
+                benefitY += 1;
+                //console.log(yPos);
+                if (benefitY > c.height) {
+                  benefitY=-50;
+                  benefitX = Math.floor(Math.random() * (c.width - 0));
+                }
+               
+               //requestAnimationFrame(benefit);
+               
+            }
+            
+            function harm() {
+                var img = new Image();
+                img.src = "http://piq.codeus.net/static/media/userpics/piq_299537_400x400.png";
+                
+                ctx.drawImage(img,harmX,benefitY,25,25);   
+                benefitY += 1;
+                //console.log(yPos);
+                if (benefitY > c.height) {
+                  benefitY=-50;
+                  harmX = Math.floor(Math.random() * (c.width - 0));
+                }
+               
+               //requestAnimationFrame(benefit);
+               
+            }
+
+            
+        </script>
+    </body>
+</html>
