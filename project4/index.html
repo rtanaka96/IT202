@@ -5,34 +5,37 @@
         <meta charset="utf-8">
         <style>
             canvas {
-                background:#fff;
+                background-image:url(bg.png);
+                background-repeat:no-repeat;
+                background-size:cover;
                 border:2px solid black;
             }
         </style>
     </head>
     <body>
-        <canvas id="canvas" height="250" width="400"></canvas>
+        <canvas id="canvas" height="400" width="400"></canvas>
         
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
             var c = document.getElementById("canvas");
             var ctx = c.getContext("2d");
+            ctx.imageSmoothingEnabled = false;
              
             //player img&info
             var player = new Image();
-            player.src = "https://24.media.tumblr.com/92e72aba50aaf642921b1c2636540881/tumblr_mnb0sun4SX1s96b9jo1_500.gif";
+            player.src = "mario.png";
             
             //benefit character
             var benefit = new Image();
-            benefit.src = "https://i.pinimg.com/originals/08/6f/3f/086f3f656f14ed7c32c048e33137c7c8.gif";
+            benefit.src = "heal.png";
             
             //harm character
             var harm = new Image();
-            harm.src = "http://rs1269.pbsrc.com/albums/jj588/CutePixelIcons/Cute%20Pixel%20Icons/poison_bottle_by_plasticumbrella-d3cagei.gif~c200";
+            harm.src = "harm.png";
             
             //x and y
             var x = 0;
-            var y = c.height-50;
+            var y = c.height-(50+60);
             var benefitY = 0;
             var harmY = 0;
             var harmX = Math.floor(Math.random() * (c.width - 0)+50);
@@ -40,8 +43,8 @@
             var lives = 3;
             var score = 0;
             
-            function draw(img,x,y) {
-                ctx.drawImage(img,x,y,50,50);
+            function draw(img,x,y,w,h) {
+                ctx.drawImage(img,x,y,w,h);
             }
             
             function game() {
@@ -52,20 +55,20 @@
                 else {
                     console.log('true');
                     ctx.clearRect(0,0,c.width,c.height);
-                    draw(player,x,y);
+                    draw(player,x,y,50,50);
                     harmY+=2;
                     benefitY+=2;
                     if(harmY > c.height) {
-                        harmY = -50;
-                        harmX = Math.floor(Math.random() * (c.width - 0)+50);
+                        harmY = -30;
+                        harmX = Math.floor(Math.random() * (c.width - 0)+30);
                     }
                     else if(benefitY > c.height) {
-                        benefitX = Math.floor(Math.random() * (c.width - 0)+50);
-                        benefitY = -50;
+                        benefitX = Math.floor(Math.random() * (c.width - 0)+30);
+                        benefitY = -30;
                     }
                 
-                    draw(benefit,benefitX,benefitY);
-                    draw(harm,harmX,harmY);
+                    draw(benefit,benefitX,benefitY,30,30);
+                    draw(harm,harmX,harmY,30,30);
                     requestAnimationFrame(game);
                     scoreAdd();
                     liveDeduct();
@@ -94,13 +97,13 @@
                     x=c.width;
                 }
                 if(lives > 0) {
-                    draw(player,x,y);
+                    draw(player,x,y,50,50);
                 }
             });
             
             function scoreAdd() {
                 var chara = {x: x, y: y, width: 50};
-                var benefit = {x: benefitX, y: benefitY, width: 50};
+                var benefit = {x: benefitX, y: benefitY, width: 30};
 
                 if (chara.x < benefit.x + benefit.width &&
                    chara.x + chara.width > benefit.x &&
@@ -114,13 +117,13 @@
                 ctx.font="15px Helvetica";
                 ctx.textAlign="center"; 
                 ctx.textBaseline = "middle";
-                ctx.fillStyle = "#000000";
+                ctx.fillStyle = "#fff";
                 ctx.fillText('SCORE: ' + score,10+(100/2),10+(50/2));
             }
             
             function liveDeduct() {
                 var chara = {x: x, y: y, width: 50};
-                var harm = {x: harmX, y: harmY, width: 50};
+                var harm = {x: harmX, y: harmY, width: 30};
                 
                 if (chara.x < harm.x + harm.width &&
                    chara.x + chara.width > harm.x &&
@@ -134,13 +137,15 @@
                 ctx.font="15px Helvetica";
                 ctx.textAlign="center"; 
                 ctx.textBaseline = "middle";
-                ctx.fillStyle = "#000000";
+                ctx.fillStyle = "#fff";
                 ctx.fillText('LIVES: ' + lives,c.width-(100/2)-10,10+(50/2));
             }
             
             function gameOver() {
-                ctx.font='900 50px Helvetica';
-            ctx.textAlign="center";
+                    ctx.fillStyle="#fff"
+                    ctx.fillRect(0,0,c.width,c.height);
+                    ctx.font='900 50px Helvetica';
+                ctx.textAlign="center";
                      ctx.fillStyle = "red";
                      ctx.fillText('Game Over!',c.width/2,(c.height/2)-30);
                      
