@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="mdc-typography">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>NearYou</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="one" class="screen">
+      <main>
+        <h1 class="mdc-typography--display1">NearYou</h1>
+        <p class="mdc-typography--subheading2">What do you want to cook with today?</p>
+        
+        <form action="#" id="search">
+         <div class="mdc-form-field">
+            <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+              <input id="lastname" type="text" class="mdc-text-field__input">
+              <label for="lastname" class="mdc-text-field__label">
+                Search for a recipe
+              </label>
+              <div class="mdc-text-field__bottom-line"></div>
+            </div>
+          </div>
+          
+          <br>
+          
+          <button type="submit"
+                  class="mdc-button
+                         mdc-button--raised
+                         mdc-ripple-surface"
+                  data-mdc-auto-init="MDCRipple">
+            Search
+          </button>
+        </form>
+      </main>
+    </div>
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="main.js"></script>
+    <script>window.mdc.autoInit();</script>
+    <script>
+      mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
+    </script>
+  </body>
+</html>

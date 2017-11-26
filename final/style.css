@@ -1,0 +1,17 @@
+.mdc-select {
+    width:auto !important;
+    min-width:200px;
+}
+
+#test {
+    display:none;
+}
+
+body {
+    text-align:center;
+}
+
+#form {
+    position:absolute;
+    margin:0 auto;
+}
