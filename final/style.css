@@ -2,8 +2,9 @@
     --mdc-theme-primary: #0e4ead;
 }
 
-body {
+body, html {
     cursor:default;
+    background:#fff;
 }
 
 .mdc-select {
@@ -29,7 +30,7 @@ body {
     height:100%;
 }
 
-.screen, #cardTemplate, #badgeTemplate, #ingredientTemplate {
+.screen, #cardTemplate, #badgeTemplate, #ingredientTemplate, #popupTemplate {
     display:none;
 }
 
@@ -59,12 +60,22 @@ body {
     background-image:url('https://upload.wikimedia.org/wikipedia/en/6/61/Game_Grumps_Logo.jpg');
     background-size: cover;
     background-repeat: no-repeat;
-    height: 200px;
+    height: auto;
+    width:30%;
+    float:left;
+}
+
+.mdc-card__inner {
+    float:right;
+    width:70%;
 }
 
 .mdc-card {
-    height: 100%;
+    flex-direction:row;
+    height:auto;
     width: 100%;
+    margin:10px 0px;
+    background:#fff;
 }
 
 .mdc-list-item {
@@ -75,10 +86,77 @@ body {
     margin:0 auto;
     display: block;
     overflow: hidden;
+    height:35px;
 }
 
 .mdc-fab {
     position:absolute;
     right:1.5rem;
-    margin-top: -2rem;
+    margin-top: 1rem;
+}
+
+.popupContain {
+    display:none;
+}
+
+.chartDiv {
+    display:inline-block;
+    margin:0 auto !important;
+}
+
+h3 {
+    font-family: Roboto,sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: .875rem;
+    font-weight: bold;
+    letter-spacing: .04em;
+    line-height: 1.25rem;
+    text-decoration: inherit;
+    text-transform: inherit;
+    color: rgba(0,0,0,.87);
+    color: var(--mdc-theme-text-primary-on-light,rgba(0,0,0,.87));
+}
+
+header .mdc-toolbar__title {
+    color:#fff !important;
+}
+
+#map {
+  height:600px;
+}
+/* Smartphones (portrait and landscape) ----------- */
+@media (min-device-width : 320px) and (max-device-width : 480px) {
+    .mdc-card__media, .mdc-card__inner {
+        width:100%;
+        float:none;
+    }
+    .mdc-card__media {
+        height:200px;
+    }
+    .mdc-card {
+        flex-direction:column;
+    }
+    .mdc-fab {
+        margin-top:-2rem;
+    }
+}
+/* Desktops and laptops ----------- */
+@media (min-width : 1224px) {
+    .mdc-card__media {
+        width:30%;
+    }
+    .mdc-card__inner {
+        width:70%;
+    }
+}
+
+/* Large screens ----------- */
+@media (min-width : 1824px) {
+    .mdc-card__media {
+        width:40%;
+    }
+    .mdc-card__inner {
+        width:60%;
+    }
 }

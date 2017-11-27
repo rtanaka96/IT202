@@ -6,6 +6,7 @@ var s3 = $('#three');
 
 $(document).ready(function() {
     s1.show();
+    navbar();
     //badge();
 });
 
@@ -19,14 +20,21 @@ function badge(){
 
 function search(query) {
     $.get('https://api.edamam.com/search?q=' + query + '&app_id=5e692135&app_key=a0f247649aae63fe5163c516129027ff',function(response) {
+        $('#two').find('#resultCount').html("<span class='mdc-typography--title' id='resultCount'>"+response.count+"</span> <span class='mdc-typography--subheading2'>results found</span>");
         $.each(response.hits,function(k,v) {
-            var calories = v.recipe.calories;
             console.log(v);
             
             var card = $('#cardTemplate').clone().removeAttr('id');
+            var cal = v.recipe.calories.toString().slice(0,4);
+            if (cal[cal.length-1] === ".") {
+                cal = cal.slice(0,-1);
+            }
             card.find('.mdc-card__title').text(v.recipe.label);
-            card.find('.mdc-card__subtitle').text(v.recipe.calories.toString().slice(0,4) + ' calories');
+            card.find('.mdc-card__subtitle').text(cal + ' calories');
             card.find('.mdc-card__media').css('background-image','url('+v.recipe.image+')');
+            
+            var chartdiv = card.find('.chartDiv');
+            chartdiv.attr('id',v.recipe.label);
 
             $.each(v.recipe.dietLabels, function(i,w) {
                 var badge = $('#badgeTemplate').clone().removeAttr('id');
@@ -52,37 +60,52 @@ function search(query) {
             
             var nutrients = v.recipe.totalNutrients;
             
-            google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-            
-                function drawChart() {
-                    var data = new google.visualization.DataTable();
-                    data.addColumn('string', 'Topping');
-                    data.addColumn('number', 'Slices');
-                    data.addRows([
-                      [nutrients.CA.label, nutrients.CA.quantity],
-                      [nutrients.CHOCDF.label, nutrients.CHOCDF.quantity],
-                      [nutrients.CHOLE.label, nutrients.CHOLE.quantity],
-                      [nutrients.FAT.label, nutrients.FAT.quantity],
-                      [nutrients.FE.label, nutrients.FE.quantity],
-                      [nutrients.FIBTG.label, nutrients.FIBTG.quantity],
-                      [nutrients.K.label, nutrients.K.quantity],
-                      [nutrients.MG.label, nutrients.MG.quantity],
-                      [nutrients.NA.label, nutrients.NA.quantity],
-                      [nutrients.PROCNT.label, nutrients.PROCNT.quantity],
-                      [nutrients.SUGAR.label, nutrients.SUGAR.quantity],
-                    ]);
-            
-                    // Set chart options
-                    var options = {'title':'How Much Pizza I Ate Last Night',
-                                   'width':400,
-                                   'height':300};
-            
-                    // Instantiate and draw our chart, passing in some options.
-                    var chart = new google.visualization.PieChart(document.getElementsByClassName('chart_div'));
-                    chart.draw(data, options);
-            }
+            google.charts.load('current', {'packages':['corechart']});  
+            google.charts.setOnLoadCallback(drawChart);
 
+            function drawChart() {
+                var nut = v.recipe.totalNutrients;
+                var nutKeys = Object.keys(nut);
+                var nutVal = Object.values(nut);
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Nutrient');
+                data.addColumn('number', 'Amount');
+                for (var i = 0; i < nutKeys.length ; i++) {
+                    data.addRows([
+                        [nutVal[i].label,nutVal[i].quantity]
+                    ]);   
+                }
+                var options = {
+                       width:'100%',
+                       height:200,
+                       fontName:'Roboto',
+                       pieSliceBorderColor:'transparent',
+                       sliceVisibilityThreshold:0.01,
+                       chartArea: {'width': '80%', 'height': '80%'},
+                       pieSliceText:'none'
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById(v.recipe.label));
+                chart.draw(data, options);
+            }
+        });
+        
+        var mcdfabToggle = 0;
+        
+        $('.mdc-fab').on('click',function() {
+            var popcontain = $(this).parent().children('.popupContain');
+            var textcontain = $(this).parent().children('.mdc-card__supporting-text');
+            popcontain.stop().slideToggle();
+            textcontain.stop().slideToggle();
+            if(mcdfabToggle==1) {
+                $(this).find('span').text('expand_more');
+                mcdfabToggle = 0;
+            }
+            else if(mcdfabToggle==0) {
+                $(this).find('span').text('expand_less');
+                mcdfabToggle = 1;
+            }
+            console.log(mcdfabToggle);
         });
     });
 }
@@ -90,12 +113,85 @@ function search(query) {
 document.getElementById('search').addEventListener('submit', function(evt) {
     evt.preventDefault();
     var searchquery = $('#searchquery').val();
-    search(searchquery); 
-    s1.hide();
-    s2.show();
+    if(searchquery.length <= 1) {
+        alert('Please enter a search query!');
+    }
+    else {
+        s2.find('.mdc-card').not('#cardTemplate').remove();
+        search(searchquery); 
+        s1.hide();
+        s2.show();
+    }
 });
 
-$('.mdc-fab__icon').on('click',function() {
-    s2.hide();
-    s3.show();
-});
+function navbar() {
+     $('#searchNav').on('click',function() {
+         s1.show();
+         s2.hide();
+         s3.hide();
+     });
+     $('#resultNav').on('click',function() {
+         s1.hide();
+         s2.show();
+         s3.hide();
+     });
+     $('#mapNav').on('click',function() {
+         s1.hide();
+         s2.hide();
+         s3.show();
+         initMap();
+     });
+}
+
+var map;
+var infowindow;
+var pos;
+
+function initMap() {
+
+  if (navigator.geolocation) { //GEO LOCATION, FINDS USERS LOCATION
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+      pos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: myLocation,
+        zoom: 13
+      });
+      map.setCenter(pos);
+      var myLocation = pos; //Sets variable to geo location long and lat co-ordinates.
+
+      var service = new google.maps.places.PlacesService(map);
+      service.nearbySearch({
+        location: myLocation, //Uses geolocation to find the following
+        radius: 5000,
+        types: ['grocery_or_supermarket']
+      }, callback);
+    })
+  };
+}
+
+function callback(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
+    for (var i = 0; i < results.length; i++) {
+      createMarker(results[i]);
+    }
+  }
+  $('#mapresultcount').text(results.length);
+}
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var infowindow = new google.maps.InfoWindow();
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(place.name);
+    infowindow.open(map, this);
+  });
+}

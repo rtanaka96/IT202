@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>NearYou</title>
+    <title>RecipeBook</title>
     <link
       rel="stylesheet"
       href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
@@ -12,9 +12,22 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   </head>
   <body>
+    <header class="mdc-toolbar">
+      <div class="mdc-toolbar__row">
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+          <a class="mdc-toolbar__title" href="index.html">RecipeBook</a>
+        </section>
+        <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+          <a href="#" class="material-icons mdc-toolbar__icon" id="searchNav">search</a>
+          <a href="#" class="material-icons mdc-toolbar__icon" id="resultNav">description</a>
+          <a href="#" class="material-icons mdc-toolbar__icon" id="mapNav">near_me</a>
+        </section>
+      </div>
+    </header>
+    
     <div id="one" class="screen">
       <main>
-        <h1 class="mdc-typography--display1">NearYou</h1>
+        <h1 class="mdc-typography--display1">RecipeBook</h1>
         <p class="mdc-typography--subheading2">What do you want to cook with today?</p>
 
         <form action="#" id="search">
@@ -44,11 +57,14 @@
 
     <div id="two" class="screen">
       <main>
-        <div class="mdc-card" id="cardTemplate" class="template">
+        <div class="result">
+          <p class="mdc-typography--body1" id="resultCount">No results found. Please enter a search term!</p>
+        </div>
+        <div class="mdc-card" id="cardTemplate">
           <section class="mdc-card__media"></section>
           <section class="mdc-card__inner">
-            <button class="mdc-fab material-icons" aria-label="Expand">
-                <span class="mdc-fab__icon" id="expand">
+            <button class="mdc-fab material-icons">
+                <span class="mdc-fab__icon">
                   expand_more
                 </span>
               </button>
@@ -65,22 +81,20 @@
                 <li id="ingredientTemplate" class="mdc-list-item mdc-typography--body1"></li>
               </ul>
             </section>
+            <section class="popupContain">
+              <h3>Nutrient Values</h3>
+              <div class="chartDiv"></div>
+            </section>
           </section>
         </div>
       </main>
     </div>
     
-    <div id="three" class="scree">
+    <div id="three" class="screen">
       <main>
-        <div class="mdc-card">
-        <section class="mdc-card__primary">
-          <h1 class="mdc-card__title mdc-card__title--large">Title goes here</h1>
-          <h2 class="mdc-card__subtitle">Subtitle here</h2>
-        </section>
-        <section class="mdc-card__supporting-text">
-          <div class="chart_div"></div>
-        </section>
-      </div>
+        <p class="mdc-typography--title">Nearby Supermarkets</p>
+        <p class="mdc-typography--body1">There are <span id="mapresultcount"></span> grocery stores near you!</p>
+        <div id="map"></div>
       </main>
     </div>
     
@@ -91,5 +105,6 @@
     <script>
       //mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyxP6holBPUQtnYK58Misiudym6UiGieQ&libraries=places&callback=initMap" async defer></script>
   </body>
 </html>
