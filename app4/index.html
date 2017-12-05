@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>App4</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row align-items-center">
+                <div class="card col">
+                    <img class="card-img-top" src="http://success-at-work.com/wp-content/uploads/2015/04/free-stock-photos.gif">
+                    <div class="card-block">
+                        <h4 class="card-title">Tawshif Ahsan Khan</h4>
+                        <div class="meta">
+                            <a href="#">Friends</a>
+                        </div>
+                        <div class="card-text">
+                            Tawshif is a web designer living in Bangladesh.
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="float-right">Joined in 2013</span>
+                        <span class="other"><i class=""></i>75 Friends</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        $.ajax({
+          url: 'https://randomuser.me/api/',
+          dataType: 'json',
+          success: function(data) {
+            var card = $('.card');
+            card.find('.card-title').text(data.results[0].name.first + ' ' + data.results[0].name.last);
+            card.find('.meta').text(data.results[0].location.street + ', ' + data.results[0].location.city + ', ' + data.results[0].location.state);
+            card.find('.card-text').text('Contact at: ' + data.results[0].email)
+            card.find('.float-right').text('Cell: ' + data.results[0].cell);
+            card.find('.other').text('| DOB: ' + data.results[0].dob);
+          }
+        });
+    </script>
+</body>
+</html>

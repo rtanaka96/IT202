@@ -18,12 +18,11 @@
              var ctx = c.getContext("2d");
              
             $('#canvas').on('click',function(evt) {
-                //console.log(evt);
-                //drawCircle(evt.clientX,evt.clientY);
                 ctx.clearRect(0,0,c.width,c.height);
             });
             
             function drawCircle(x,y) {
+                ctx.clearRect(0,0,c.width,c.height);
                 var xpos = Math.floor(Math.random()*c.width);
                 var ypos = Math.floor(Math.random()*c.height);
                 

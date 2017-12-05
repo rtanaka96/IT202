@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App 10</title>
+    <meta charset="utf-8">
+    <style>
+        canvas {
+            background:#fff;
+            border:1px dotted #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" height="400" width="400"></canvas>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var c = document.getElementById("canvas");
+        var ctx = c.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
+
+        $(document).keydown(function(e) {
+            switch (e.which) {
+                case 37: // left
+                    x -= 5;
+                    break;
+
+                case 39: // right
+                    x += 5;
+                    break;
+
+                default:
+                    return; // exit this handler for other keys
+            }
+            
+            if(x > c.width+50) {
+                x = -50;
+            }
+            else if (x < -50) {
+                x = c.width+50;
+            }
+            ctx.clearRect(0,0,c.width,c.height);
+            draw(x,y);
+        });
+        
+        var hue = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+
+        function draw(x,y) {
+            ctx.beginPath();
+            ctx.arc(x,y, 50, 0, 2 * Math.PI);
+            ctx.fillStyle = hue;
+            ctx.fill();
+            ctx.strokeStyle = "rgba(255,255,255,0)";
+            ctx.stroke();
+            requestAnimationFrame(draw);
+        }
+        
+        var x = 0;
+        var y = (c.height/2);
+        
+        draw(x,y);
+        
+        requestAnimationFrame(draw);
+    </script>
+</body>
+
+</html>

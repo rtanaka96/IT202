@@ -54,8 +54,9 @@
     </div>
 
     <script>
-      $.get('https://data.cityofchicago.org/resource/cdmx-wzbz.json?status=Open&$limit=100',function(response) {
+      $.get('https://data.cityofchicago.org/resource/cdmx-wzbz.json?$limit=100',function(response) {
         //console.log(response);
+        //for some reason there aren't many open requests??
         $.each(response,function(k,v) {
           //console.log(k,v);
           var serviceNo = response[k].service_request_number;

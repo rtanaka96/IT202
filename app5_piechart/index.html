@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="chart_div"></div>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    var url = 'https://data.cityofchicago.org/resource/suj7-cg3j.json?$select=vehicle_make_model,COUNT(vehicle_make_model)&$group=vehicle_make_model';
+    $.get(url, function(response) {
+      google.charts.load('current', { 'packages': ['corechart'] });
+
+      google.charts.setOnLoadCallback(drawChart);
+      
+      function drawChart() {
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Type');
+        data.addColumn('number', 'Amount');
+        
+        $.each(response,function(k,v) {
+          data.addRows([
+              [v.vehicle_make_model, parseInt(v.COUNT_vehicle_make_model)]
+            ])
+        });
+        
+        var winwid = $(window).width();
+        
+        var options = {
+          'title': '311 Abandoned Vehicle Requests',
+          'width': winwid,
+          'height': 500,
+          'pieSliceBorderColor':'transparent',
+          'sliceVisibilityThreshold':.02
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+
+    });
+  </script>
+</body>
+
+</html>
