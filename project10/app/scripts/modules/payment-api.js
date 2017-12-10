@@ -43,19 +43,11 @@ const PAYMENT_METHODS = [
 
 export default class PaymentAPIWrapper {
 
-  /*
-  * Given a cart set up with an order, gets payment authorization.
-  * Returns a promise that resolves when payment is complete, this
-  * has a data object you can pass to the back-end payment server.
-  */
   checkout(cart) {
     let request = this.buildPaymentRequest(cart);
     let response;
-    // Show UI then continue with user payment info
     return request.show()
       .then(r => {
-        // The UI will show a spinner to the user until
-        // `request.complete()` is called.
         response = r;
         let data = r.toJSON();
         console.log(data);
@@ -73,17 +65,11 @@ export default class PaymentAPIWrapper {
       });
   }
 
-  /*
-   * Creates a PaymentRequest object including the event handlers used to
-   * update the payment details as the user makes choices.
-   */
   buildPaymentRequest(cart) {
-    // Supported payment instruments
     const supportedInstruments = [{
       supportedMethods: ['https://android.com/pay'],
       data: {
         environment: 'TEST',
-        // Credit Cards allowed via Android Pay
         allowedCardNetworks: ['AMEX', 'MASTERCARD', 'VISA', 'DISCOVER'],
         paymentMethodTokenizationParameters: {
           tokenizationType: 'NETWORK_TOKEN',
@@ -101,7 +87,6 @@ export default class PaymentAPIWrapper {
       }
     }];
 
-    // Payment options
     const paymentOptions = {
       requestShipping: true,
       requestPayerEmail: true,
@@ -114,10 +99,8 @@ export default class PaymentAPIWrapper {
 
     let details = this.buildPaymentDetails(cart, shippingOptions, selectedOption);
 
-    // Initialize
     let request = new PaymentRequest(supportedInstruments, details, paymentOptions);
 
-    // When user selects a shipping address, add shipping options to match
     request.addEventListener('shippingaddresschange', e => {
       e.updateWith((_ => {
         // Get the shipping options and select the least expensive
@@ -127,8 +110,6 @@ export default class PaymentAPIWrapper {
         return Promise.resolve(details);
       })());
     });
-
-    // When user selects a shipping option, update cost, etc. to match
     request.addEventListener('shippingoptionchange', e => {
       e.updateWith((_ => {
         selectedOption = request.shippingOption;
@@ -140,12 +121,7 @@ export default class PaymentAPIWrapper {
     return request;
   }
 
-  /*
-   * Creates the PaymentDetails dictionary inside the PaymentRequest.
-   * This can change as the user selects shipping options.
-   */
   buildPaymentDetails(cart, shippingOptions, shippingOptionId) {
-    // Start with the cart items
     let displayItems = cart.cart.map(item => {
       return {
         label: `${item.sku}: ${item.quantity}x $${item.price}`,
@@ -182,16 +158,12 @@ export default class PaymentAPIWrapper {
     return details;
   }
 
-  /*
-   * Utility function to extract the correct shipping options for a country.
-   */
   optionsForCountry(country) {
     country = country.toLowerCase();
     if (!country || !SHIPPING_OPTIONS.hasOwnProperty(country)) {
       country = 'international';
     }
     let options = SHIPPING_OPTIONS[country];
-    // Sort by price, lowest first
     options.sort((a, b) => {
       return a.price - b.price;
     });

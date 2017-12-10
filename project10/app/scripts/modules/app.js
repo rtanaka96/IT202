@@ -16,7 +16,7 @@ limitations under the License.
 
 import Cart from './cart.js';
 import IDBStorage from './idb-storage.js';
-import LocalStorage from './idb-storage.js';
+import LocalStorage from './local-storage.js';
 import CartView from './cart-view.js';
 import ShopView from './shop-view.js';
 import PaymentForm from './payment-form.js';

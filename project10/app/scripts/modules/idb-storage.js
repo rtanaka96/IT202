@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import * as idb from './idb-storage.js';
+import * as idb from 'idb';
 
 const CART_STORE = 'cart';
 const RW = 'readwrite';
@@ -26,7 +26,6 @@ export default class IDBStorage {
     this._open();
   }
 
-  /* Takes an array of items and writes JSON to local storage */
   save(items) {
     return this._dbPromise.then(db => {
       const tx = db.transaction(CART_STORE, RW);
@@ -51,10 +50,8 @@ export default class IDBStorage {
   }
 
   delete() {
-//    localStorage.removeItem(this._id);
   }
 
-  // Returns a promise with the total number of records saved
   count() {
     return this._dbPromise.then(db => {
       const tx = db.transaction(CART_STORE);
@@ -62,7 +59,6 @@ export default class IDBStorage {
     });
   }
 
-  // Testing use only, will close the dabase but renders the adaptor unusable
   _close() {
     return this._dbPromise.then(db => {
       let closePromise = db.close();
@@ -77,7 +73,6 @@ export default class IDBStorage {
     });
   }
 
-  // testing hooks so we can test w/o wrecking the stored data
   set key(value) {
     if (value === this._id) return;
     this._close().then(() => {

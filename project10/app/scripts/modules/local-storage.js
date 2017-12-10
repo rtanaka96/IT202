@@ -18,8 +18,6 @@ export default class LocalStorage {
   constructor(id = 'mfs-cart-items') {
     this._id = id;
   }
-
-  /* Takes an array of items and writes JSON to local storage */
   save(items) {
     return new Promise(resolve => {
       let json = JSON.stringify(items);
@@ -41,8 +39,6 @@ export default class LocalStorage {
   delete() {
     localStorage.removeItem(this._id);
   }
-
-  // testing hooks so we can test w/o wrecking the stored data
   set key(value) {
     this._id = value;
   }
